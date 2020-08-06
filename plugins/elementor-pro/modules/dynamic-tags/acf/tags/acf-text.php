@@ -2,7 +2,7 @@
 namespace ElementorPro\Modules\DynamicTags\ACF\Tags;
 
 use Elementor\Controls_Manager;
-use ElementorPro\Modules\DynamicTags\Tags\Base\Tag;
+use Elementor\Core\DynamicTags\Tag;
 use ElementorPro\Modules\DynamicTags\ACF\Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -31,7 +31,18 @@ class ACF_Text extends Tag {
 	}
 
 	public function render() {
-		list( $field, $meta_key ) = Module::get_tag_value_field( $this );
+		$key = $this->get_settings( 'key' );
+		if ( empty( $key ) ) {
+			return;
+		}
+
+		list( $field_key, $meta_key ) = explode( ':', $key );
+
+		if ( 'options' === $field_key ) {
+			$field = get_field_object( $meta_key, $field_key );
+		} else {
+			$field = get_field_object( $field_key, get_queried_object() );
+		}
 
 		if ( $field && ! empty( $field['type'] ) ) {
 			$value = $field['value'];
@@ -43,7 +54,7 @@ class ACF_Text extends Tag {
 					}
 					break;
 				case 'select':
-					// Use as array for `multiple=true` or `return_format=array`.
+					// Usa as array for `multiple=true` or `return_format=array`.
 					$values = (array) $value;
 
 					foreach ( $values as $key => $item ) {
@@ -91,10 +102,17 @@ class ACF_Text extends Tag {
 	}
 
 	protected function _register_controls() {
-		Module::add_key_control( $this );
+		$this->add_control(
+			'key',
+			[
+				'label' => __( 'Key', 'elementor-pro' ),
+				'type' => Controls_Manager::SELECT,
+				'groups' => Module::get_control_options( $this->get_supported_fields() ),
+			]
+		);
 	}
 
-	public function get_supported_fields() {
+	protected function get_supported_fields() {
 		return [
 			'text',
 			'textarea',

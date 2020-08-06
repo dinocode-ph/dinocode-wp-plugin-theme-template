@@ -2,7 +2,7 @@
 namespace ElementorPro\Modules\DynamicTags\Toolset\Tags;
 
 use Elementor\Controls_Manager;
-use ElementorPro\Modules\DynamicTags\Tags\Base\Tag;
+use Elementor\Core\DynamicTags\Tag;
 use ElementorPro\Modules\DynamicTags\Toolset\Module;
 
 if ( ! defined( 'ABSPATH' ) ) {

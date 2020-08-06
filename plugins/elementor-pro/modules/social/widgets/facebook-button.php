@@ -2,7 +2,7 @@
 namespace ElementorPro\Modules\Social\Widgets;
 
 use Elementor\Controls_Manager;
-use ElementorPro\Base\Base_Widget;
+use Elementor\Widget_Base;
 use ElementorPro\Modules\Social\Classes\Facebook_SDK_Manager;
 use ElementorPro\Modules\Social\Module;
 use ElementorPro\Plugin;
@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class Facebook_Button extends Base_Widget {
+class Facebook_Button extends Widget_Base {
 
 	public function get_name() {
 		return 'facebook-button';
@@ -23,6 +23,10 @@ class Facebook_Button extends Base_Widget {
 
 	public function get_icon() {
 		return 'eicon-facebook-like-box';
+	}
+
+	public function get_categories() {
+		return [ 'pro-elements' ];
 	}
 
 	public function get_keywords() {

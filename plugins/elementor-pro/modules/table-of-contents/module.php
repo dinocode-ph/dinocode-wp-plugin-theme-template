@@ -13,7 +13,6 @@ class Module extends Module_Base {
 		parent::__construct();
 
 		add_filter( 'elementor_pro/editor/localize_settings', [ $this, 'localize_settings' ] );
-		add_filter( 'elementor_pro/frontend/localize_settings', [ $this, 'localize_settings' ] );
 	}
 
 	public function get_widgets() {

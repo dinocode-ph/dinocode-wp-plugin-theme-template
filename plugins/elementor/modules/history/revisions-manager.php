@@ -297,11 +297,7 @@ class Revisions_Manager {
 
 			$return_data = array_replace_recursive( $return_data, [
 				'config' => [
-					'document' => [
-						'revisions' => [
-							'current_id' => $current_revision_id,
-						],
-					],
+					'current_revision_id' => $current_revision_id,
 				],
 				'latest_revisions' => $latest_revisions,
 				'revisions_ids' => $all_revision_ids,
@@ -322,28 +318,21 @@ class Revisions_Manager {
 		}
 	}
 
-	public static function document_config( $settings, $post_id ) {
-		$settings['revisions'] = [
-			'enabled' => ( $post_id && wp_revisions_enabled( get_post( $post_id ) ) ),
-			'current_id' => self::current_revision_id( $post_id ),
-		];
-
-		return $settings;
-	}
-
 	/**
 	 * Localize settings.
 	 *
 	 * Add new localized settings for the revisions manager.
 	 *
-	 * Fired by `elementor/editor/editor_settings` filter.
+	 * Fired by `elementor/editor/localize_settings` filter.
 	 *
 	 * @since 1.7.0
 	 * @access public
 	 * @static
 	 */
-	public static function editor_settings( $settings ) {
+	public static function editor_settings( $settings, $post_id ) {
 		$settings = array_replace_recursive( $settings, [
+			'revisions_enabled' => ( $post_id && wp_revisions_enabled( get_post( $post_id ) ) ),
+			'current_revision_id' => self::current_revision_id( $post_id ),
 			'i18n' => [
 				'edit_draft' => __( 'Edit Draft', 'elementor' ),
 				'edit_published' => __( 'Edit Published', 'elementor' ),
@@ -389,8 +378,7 @@ class Revisions_Manager {
 	private static function register_actions() {
 		add_action( 'wp_restore_post_revision', [ __CLASS__, 'restore_revision' ], 10, 2 );
 		add_action( 'init', [ __CLASS__, 'add_revision_support_for_all_post_types' ], 9999 );
-		add_filter( 'elementor/editor/localize_settings', [ __CLASS__, 'editor_settings' ] );
-		add_filter( 'elementor/document/config', [ __CLASS__, 'document_config' ], 10, 2 );
+		add_filter( 'elementor/editor/localize_settings', [ __CLASS__, 'editor_settings' ], 10, 2 );
 		add_action( 'elementor/db/before_save', [ __CLASS__, 'db_before_save' ], 10, 2 );
 		add_action( '_wp_put_post_revision', [ __CLASS__, 'save_revision' ] );
 		add_action( 'wp_creating_autosave', [ __CLASS__, 'update_autosave' ] );

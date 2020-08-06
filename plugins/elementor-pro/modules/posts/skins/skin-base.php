@@ -42,7 +42,6 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 		$this->register_excerpt_controls();
 		$this->register_meta_data_controls();
 		$this->register_read_more_controls();
-		$this->register_link_controls();
 	}
 
 	public function register_design_controls() {
@@ -120,7 +119,7 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 				],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-posts-container .elementor-post__thumbnail' => 'padding-bottom: calc( {{SIZE}} * 100% );',
-					'{{WRAPPER}}:after' => 'content: "{{SIZE}}";',
+					'{{WRAPPER}}:after' => 'content: "{{SIZE}}"; position: absolute; color: transparent;',
 				],
 				'condition' => [
 					$this->get_control_id( 'thumbnail!' ) => 'none',
@@ -291,28 +290,6 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 		);
 	}
 
-	protected function register_link_controls() {
-		$this->add_control(
-			'open_new_tab',
-			[
-				'label' => __( 'Open in new window', 'elementor-pro' ),
-				'type' => Controls_Manager::SWITCHER,
-				'label_on' => __( 'Yes', 'elementor-pro' ),
-				'label_off' => __( 'No', 'elementor-pro' ),
-				'default' => 'no',
-				'render_type' => 'none',
-			]
-		);
-	}
-
-	protected function get_optional_link_attributes_html() {
-		$settings = $this->parent->get_settings();
-		$new_tab_setting_key = $this->get_control_id( 'open_new_tab' );
-		$optional_attributes_html = 'yes' === $settings[ $new_tab_setting_key ] ? 'target="_blank"' : '';
-
-		return $optional_attributes_html;
-	}
-
 	protected function register_meta_data_controls() {
 		$this->add_control(
 			'meta_data',
@@ -409,6 +386,7 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 			[
 				'label' => __( 'Alignment', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'options' => [
 					'left' => [
 						'title' => __( 'Left', 'elementor-pro' ),
@@ -521,6 +499,7 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 	}
 
 	protected function register_design_content_controls() {
+
 		$this->start_controls_section(
 			'section_design_content',
 			[
@@ -841,11 +820,8 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 		if ( empty( $thumbnail_html ) ) {
 			return;
 		}
-
-		$optional_attributes_html = $this->get_optional_link_attributes_html();
-
 		?>
-		<a class="elementor-post__thumbnail__link" href="<?php echo $this->current_permalink; ?>" <?php echo $optional_attributes_html; ?>>
+		<a class="elementor-post__thumbnail__link" href="<?php echo $this->current_permalink; ?>">
 			<div class="elementor-post__thumbnail"><?php echo $thumbnail_html; ?></div>
 		</a>
 		<?php
@@ -856,12 +832,10 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 			return;
 		}
 
-		$optional_attributes_html = $this->get_optional_link_attributes_html();
-
 		$tag = $this->get_instance_value( 'title_tag' );
 		?>
 		<<?php echo $tag; ?> class="elementor-post__title">
-			<a href="<?php echo $this->current_permalink; ?>" <?php echo $optional_attributes_html; ?>>
+			<a href="<?php echo $this->current_permalink; ?>">
 				<?php the_title(); ?>
 			</a>
 		</<?php echo $tag; ?>>
@@ -893,11 +867,8 @@ abstract class Skin_Base extends Elementor_Skin_Base {
 		if ( ! $this->get_instance_value( 'show_read_more' ) ) {
 			return;
 		}
-
-		$optional_attributes_html = $this->get_optional_link_attributes_html();
-
 		?>
-			<a class="elementor-post__read-more" href="<?php echo $this->current_permalink; ?>" <?php echo $optional_attributes_html; ?>>
+			<a class="elementor-post__read-more" href="<?php echo $this->current_permalink; ?>">
 				<?php echo $this->get_instance_value( 'read_more_text' ); ?>
 			</a>
 		<?php

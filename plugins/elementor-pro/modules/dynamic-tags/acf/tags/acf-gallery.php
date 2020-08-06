@@ -2,7 +2,7 @@
 namespace ElementorPro\Modules\DynamicTags\ACF\Tags;
 
 use Elementor\Controls_Manager;
-use ElementorPro\Modules\DynamicTags\Tags\Base\Data_Tag;
+use Elementor\Core\DynamicTags\Data_Tag;
 use ElementorPro\Modules\DynamicTags\ACF\Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -32,22 +32,33 @@ class ACF_Gallery extends Data_Tag {
 	}
 
 	public function get_value( array $options = [] ) {
+		$key = $this->get_settings( 'key' );
+
 		$images = [];
 
-		list( $field, $meta_key ) = Module::get_tag_value_field( $this );
+		if ( ! empty( $key ) ) {
 
-		if ( $field ) {
-			$value = $field['value'];
-		} else {
-			// Field settings has been deleted or not available.
-			$value = get_field( $meta_key );
-		}
+			list( $field_key, $meta_key ) = explode( ':', $key );
 
-		if ( is_array( $value ) && ! empty( $value ) ) {
-			foreach ( $value as $image ) {
-				$images[] = [
-					'id' => $image['ID'],
-				];
+			if ( 'options' === $field_key ) {
+				$field = get_field_object( $meta_key, $field_key );
+			} else {
+				$field = get_field_object( $field_key, get_queried_object() );
+			}
+
+			if ( $field ) {
+				$value = $field['value'];
+			} else {
+				// Field settings has been deleted or not available.
+				$value = get_field( $meta_key );
+			}
+
+			if ( is_array( $value ) && ! empty( $value ) ) {
+				foreach ( $value as $image ) {
+					$images[] = [
+						'id' => $image['ID'],
+					];
+				}
 			}
 		}
 
@@ -55,10 +66,17 @@ class ACF_Gallery extends Data_Tag {
 	}
 
 	protected function _register_controls() {
-		Module::add_key_control( $this );
+		$this->add_control(
+			'key',
+			[
+				'label' => __( 'Key', 'elementor-pro' ),
+				'type' => Controls_Manager::SELECT,
+				'groups' => Module::get_control_options( $this->get_supported_fields() ),
+			]
+		);
 	}
 
-	public function get_supported_fields() {
+	protected function get_supported_fields() {
 		return [
 			'gallery',
 		];

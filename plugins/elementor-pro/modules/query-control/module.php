@@ -356,6 +356,7 @@ class Module extends Module_Base {
 		if ( empty( $query['posts_per_page'] ) ) {
 			$query['posts_per_page'] = -1;
 		}
+		$query['s'] = $data['q'];
 
 		return $query;
 	}

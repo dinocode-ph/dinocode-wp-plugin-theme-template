@@ -16,6 +16,7 @@ class API {
 	const STATUS_VALID = 'valid';
 	const STATUS_INVALID = 'invalid';
 	const STATUS_EXPIRED = 'expired';
+	const STATUS_DEACTIVATED = 'deactivated';
 	const STATUS_SITE_INACTIVE = 'site_inactive';
 	const STATUS_DISABLED = 'disabled';
 
@@ -25,11 +26,6 @@ class API {
 	 * @return \stdClass|\WP_Error
 	 */
 	private static function remote_post( $body_args = [] ) {
-			
-			return [
-			'license' => 'valid',
-			'expires' => '+120 months',
-		];
 		$body_args = wp_parse_args(
 			$body_args,
 			[
@@ -84,67 +80,36 @@ class API {
 		return $license_data;
 	}
 
-	public static function set_transient( $cache_key, $value, $expiration = '+12 hours' ) {
-		$data = [
-			'timeout' => strtotime( $expiration, current_time( 'timestamp' ) ),
-			'value' => json_encode( $value ),
-		];
-
-		update_option( $cache_key, $data );
-	}
-
-	private static function get_transient( $cache_key ) {
-		$cache = get_option( $cache_key );
-
-		if ( empty( $cache['timeout'] ) || current_time( 'timestamp' ) > $cache['timeout'] ) {
-			return false;
-		}
-
-		return json_decode( $cache['value'], true );
-	}
-
 	public static function set_license_data( $license_data, $expiration = null ) {
 		if ( null === $expiration ) {
-			$expiration = '+12 hours';
-
-			self::set_transient( '_elementor_pro_license_data_fallback', $license_data, '+24 hours' );
+			$expiration = 12 * HOUR_IN_SECONDS;
 		}
 
-		self::set_transient( '_elementor_pro_license_data', $license_data, $expiration );
+		set_transient( 'elementor_pro_license_data', $license_data, $expiration );
 	}
 
 	public static function get_license_data( $force_request = false ) {
-		$license_data_error = [
-			'license' => 'http_error',
-			'payment_id' => '0',
-			'license_limit' => '0',
-			'site_count' => '0',
-			'activations_left' => '0',
-			'success' => false,
-		];
-
-		$license_key = Admin::get_license_key();
-		if ( empty( $license_key ) ) {
-			return $license_data_error;
-		}
-
-		$license_data = self::get_transient( '_elementor_pro_license_data' );
+		$license_data = get_transient( 'elementor_pro_license_data' );
+		return $license_data;
 
 		if ( false === $license_data || $force_request ) {
 			$body_args = [
 				'edd_action' => 'check_license',
-				'license' => $license_key,
+				'license' => Admin::get_license_key(),
 			];
 
 			$license_data = self::remote_post( $body_args );
 
 			if ( is_wp_error( $license_data ) ) {
-				$license_data = self::get_transient( '_elementor_pro_license_data_fallback' );
-				if ( false === $license_data ) {
-					$license_data = $license_data_error;
-				}
+				$license_data = [
+					'license' => 'http_error',
+					'payment_id' => '0',
+					'license_limit' => '0',
+					'site_count' => '0',
+					'activations_left' => '0',
+				];
 
-				self::set_license_data( $license_data, '+30 minutes' );
+				self::set_license_data( $license_data, 30 * MINUTE_IN_SECONDS );
 			} else {
 				self::set_license_data( $license_data );
 			}
@@ -292,25 +257,5 @@ class API {
 		}
 
 		return $error_msg;
-	}
-
-	public static function is_license_active() {
-		$license_data = self::get_license_data();
-
-		return self::STATUS_VALID === $license_data['license'];
-	}
-
-	public static function is_license_about_to_expire() {
-		$license_data = self::get_license_data();
-
-		if ( ! empty( $license_data['subscriptions'] ) && 'enable' === $license_data['subscriptions'] ) {
-			return false;
-		}
-
-		if ( 'lifetime' === $license_data['expires'] ) {
-			return false;
-		}
-
-		return time() > strtotime( '-28 days', strtotime( $license_data['expires'] ) );
 	}
 }

@@ -3,7 +3,7 @@ namespace ElementorPro\Modules\QueryControl\Controls;
 
 use Elementor\Controls_Manager;
 use Elementor\Group_Control_Base;
-use ElementorPro\Core\Utils;
+use ElementorPro\Classes\Utils;
 use ElementorPro\Modules\QueryControl\Module as Query_Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -296,6 +296,7 @@ class Group_Control_Query extends Group_Control_Base {
 				'exact' => __( 'Custom', 'elementor-pro' ),
 			],
 			'default' => 'anytime',
+			'label_block' => false,
 			'multiple' => false,
 			'condition' => [
 				'post_type!' => [

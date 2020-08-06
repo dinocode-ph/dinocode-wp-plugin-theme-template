@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class Breadcrumb extends Base_Widget {
+class Breadcrumb extends Widget_Base {
 
 	public function get_name() {
 		return 'woocommerce-breadcrumb';

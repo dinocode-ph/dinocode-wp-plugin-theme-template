@@ -11,7 +11,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-abstract class Products_Base extends Base_Widget {
+abstract class Products_Base extends Widget_Base {
 
 
 	protected function _register_controls() {
@@ -971,6 +971,7 @@ abstract class Products_Base extends Base_Widget {
 			[
 				'label' => __( 'Position', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'options' => [
 					'left' => [
 						'title' => __( 'Left', 'elementor-pro' ),

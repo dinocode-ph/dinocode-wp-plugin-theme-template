@@ -3,7 +3,7 @@ namespace ElementorPro\Modules\QueryControl\Classes;
 
 use Elementor\Widget_Base;
 use ElementorPro\Modules\QueryControl\Module;
-use ElementorPro\Core\Utils;
+use ElementorPro\Classes\Utils;
 
 /**
  * Class Elementor_Post_Query

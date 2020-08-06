@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class Elements extends Base_Widget {
+class Elements extends Widget_Base {
 
 	public function get_name() {
 		return 'wc-elements';

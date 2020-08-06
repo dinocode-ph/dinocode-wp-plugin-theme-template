@@ -171,7 +171,6 @@ class Admin {
 
 		$is_manual_mode = ( isset( $_GET['mode'] ) && 'manually' === $_GET['mode'] );
 
-		$is_manual_mode = true;
 		if ( $is_manual_mode ) {
 			$this->render_manually_activation_widget( $license_key );
 			return;
@@ -196,7 +195,7 @@ class Admin {
 						</a>
 					</div>
 				<?php else :
-					$license_data = API::get_license_data( true ); ?>
+					$license_data = API::get_license_data(); ?>
 					<h3><?php _e( 'Status', 'elementor-pro' ); ?>:
 						<?php if ( API::STATUS_EXPIRED === $license_data['license'] ) : ?>
 							<span style="color: #ff0000; font-style: italic;"><?php _e( 'Expired', 'elementor-pro' ); ?></span>
@@ -272,13 +271,8 @@ class Admin {
 		return false;
 	}
 
-	/**
-	 * @deprecated 2.9.0 Use ElementorPro\License\API::is_license_about_to_expire() instead
-	 *
-	 * @return bool
-	 */
 	public function is_license_about_to_expire() {
-		return Api::is_license_about_to_expire();
+		return false;
 	}
 
 	public function admin_license_details() {
@@ -290,7 +284,7 @@ class Admin {
 			return;
 		}
 
-		$renew_url = API::RENEW_URL;
+		//$renew_url = API::RENEW_URL;
 
 		$license_key = self::get_license_key();
 
@@ -336,15 +330,10 @@ class Admin {
 			return;
 		}
 
-		if ( API::is_license_active() ) {
-			if ( API::is_license_about_to_expire() ) {
+		if ( API::STATUS_VALID === $license_data['license'] ) {
+			if ( $this->is_license_about_to_expire() ) {
 				$title = sprintf( __( 'Your License Will Expire in %s.', 'elementor-pro' ), human_time_diff( current_time( 'timestamp' ), strtotime( $license_data['expires'] ) ) );
-
-				if ( isset( $license_data['renewal_discount'] ) && 0 < $license_data['renewal_discount'] ) {
-					$description = sprintf( __( '<a href="%1$s" target="_blank">Renew your license today</a>, and get an exclusive, time-limited %2$s discount.', 'elementor-pro' ), $renew_url, $license_data['renewal_discount'] . '%' );
-				} else {
-					$description = sprintf( __( '<a href="%s" target="_blank">Renew now and enjoy updates</a>, support and Pro templates for another year.', 'elementor-pro' ), $renew_url );
-				}
+				$description = sprintf( __( '<a href="%s" target="_blank">Renew your license today</a>, to keep getting feature updates, premium support and unlimited access to the template library.', 'elementor-pro' ), $renew_url );
 
 				$this->print_admin_message( $title, $description, __( 'Renew License', 'elementor-pro' ), $renew_url );
 			}
@@ -465,7 +454,7 @@ class Admin {
 					<p class="description"><?php printf( __( 'Your license key should look something like this: %s', 'elementor-pro' ), '<code>fb351f05958872E193feb37a505a84be</code>' ); ?></p>
 
 				<?php else :
-					$license_data = API::get_license_data( true ); ?>
+					$license_data = API::get_license_data(); ?>
 					<input type="hidden" name="action" value="elementor_pro_deactivate_license"/>
 
 					<label for="elementor-pro-license-key"><?php _e( 'Your License Key', 'elementor-pro' ); ?>:</label>
@@ -506,20 +495,6 @@ class Admin {
 		<?php
 	}
 
-	public function on_deactivate_plugin( $plugin ) {
-		if ( ELEMENTOR_PRO_PLUGIN_BASE !== $plugin ) {
-			return;
-		}
-
-		wp_remote_post( 'https://my.elementor.com/api/v1/feedback-pro/', [
-			'timeout' => 30,
-			'body' => [
-				'api_version' => ELEMENTOR_PRO_VERSION,
-				'site_lang' => get_bloginfo( 'language' ),
-			],
-		] );
-	}
-
 	private function is_connected() {
 		return $this->get_app()->is_connected();
 	}
@@ -528,6 +503,10 @@ class Admin {
 		$action = $this->is_connected() ? 'activate_pro' : 'authorize';
 
 		return $this->get_app()->get_admin_url( $action, $params );
+	}
+
+	private function get_activate_manually_url() {
+		return add_query_arg( 'mode', 'manually', self::get_url() );
 	}
 
 	private function get_switch_license_url() {
@@ -560,18 +539,19 @@ class Admin {
 
 	public function __construct() {
 		add_action( 'admin_menu', [ $this, 'register_page' ], 800 );
-		add_action( 'admin_init', [ $this, 'handle_tracker_actions' ], 9 );
 		add_action( 'admin_post_elementor_pro_activate_license', [ $this, 'action_activate_license' ] );
 		add_action( 'admin_post_elementor_pro_deactivate_license', [ $this, 'action_deactivate_license' ] );
 
 		add_action( 'admin_notices', [ $this, 'admin_license_details' ], 20 );
 
-		add_action( 'deactivate_plugin', [ $this, 'on_deactivate_plugin' ] );
-
 		// Add the license key to Templates Library requests
 		add_filter( 'elementor/api/get_templates/body_args', [ $this, 'filter_library_get_templates_args' ] );
+
 		add_filter( 'elementor/finder/categories', [ $this, 'add_finder_item' ] );
+
 		add_filter( 'plugin_action_links_' . ELEMENTOR_PRO_PLUGIN_BASE, [ $this, 'plugin_action_links' ], 50 );
+
+		add_action( 'admin_init', [ $this, 'handle_tracker_actions' ], 9 );
 
 		$this->handle_dashboard_admin_widget();
 

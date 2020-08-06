@@ -4,8 +4,10 @@ namespace ElementorPro\Modules\CustomAttributes;
 use Elementor\Controls_Stack;
 use Elementor\Controls_Manager;
 use Elementor\Element_Base;
+use Elementor\Element_Column;
+use Elementor\Element_Section;
+use Elementor\Widget_Base;
 use ElementorPro\Base\Module_Base;
-use ElementorPro\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -27,14 +29,14 @@ class Module extends Module_Base {
 		static $black_list = null;
 
 		if ( null === $black_list ) {
-			$black_list = [ 'id', 'class', 'data-id', 'data-settings', 'data-element_type', 'data-widget_type', 'data-model-cid' ];
+			$black_list = [ 'id', 'class', 'data-id', 'data-settings', 'data-element_type', 'data-widget_type', 'data-model-cid', 'onload', 'onclick', 'onfocus', 'onblur', 'onchange', 'onresize', 'onmouseover', 'onmouseout', 'onkeydown', 'onkeyup', 'onerror' ];
 
 			/**
 			 * Elementor attributes black list.
 			 *
 			 * Filters the attributes that won't be rendered in the wrapper element.
 			 *
-			 * By default Elementor doesn't render some attributes to prevent things
+			 * By default Elementor don't render some attributes to prevent things
 			 * from breaking down. But this list of attributes can be changed.
 			 *
 			 * @since 2.2.0
@@ -48,16 +50,21 @@ class Module extends Module_Base {
 	}
 
 	/**
-	 * @param Element_Base $element
+	 * @param $element    Controls_Stack
+	 * @param $section_id string
 	 */
-	public function replace_go_pro_custom_attributes_controls( Element_Base $element ) {
-		Plugin::elementor()->controls_manager->remove_control_from_stack( $element->get_unique_name(), [ 'section_custom_attributes_pro', 'custom_attributes_pro' ] );
+	public function register_controls( Controls_Stack $element, $section_id ) {
+		$required_section_id = '';
 
-		$this->register_custom_attributes_controls( $element );
-	}
+		if ( $element instanceof Element_Section || $element instanceof Widget_Base ) {
+			$required_section_id = '_section_responsive';
+		} elseif ( $element instanceof Element_Column ) {
+			$required_section_id = 'section_advanced';
+		}
 
-	public function register_custom_attributes_controls( Element_Base $element ) {
-		$element_name = $element->get_name();
+		if ( $required_section_id !== $section_id ) {
+			return;
+		}
 
 		$element->start_controls_section(
 			'_section_attributes',
@@ -82,21 +89,7 @@ class Module extends Module_Base {
 		);
 
 		$element->end_controls_section();
-	}
 
-	/**
-	 * @param $element    Controls_Stack
-	 * @param $section_id string
-	 */
-	public function register_controls( Controls_Stack $element, $section_id ) {
-		if ( ! $element instanceof Element_Base ) {
-			return;
-		}
-
-		// Remove Custom CSS Banner (From free version)
-		if ( 'section_custom_attributes_pro' === $section_id ) {
-			$this->replace_go_pro_custom_attributes_controls( $element );
-		}
 	}
 
 	/**
@@ -106,54 +99,23 @@ class Module extends Module_Base {
 		$settings = $element->get_settings_for_display();
 
 		if ( ! empty( $settings['_attributes'] ) ) {
-			$attributes = $this->parse_custom_attributes( $settings['_attributes'], "\n" );
+			$attributes = explode( "\n", $settings['_attributes'] );
 
 			$black_list = $this->get_black_list_attributes();
 
-			foreach ( $attributes as $attribute => $value ) {
-				if ( ! in_array( $attribute, $black_list, true ) ) {
-					$element->add_render_attribute( '_wrapper', $attribute, $value );
+			foreach ( $attributes as $attribute ) {
+				if ( ! empty( $attribute ) ) {
+					$attr = explode( '|', $attribute, 2 );
+					if ( ! isset( $attr[1] ) ) {
+						$attr[1] = '';
+					}
+
+					if ( ! in_array( strtolower( $attr[0] ), $black_list ) ) {
+						$element->add_render_attribute( '_wrapper', trim( $attr[0] ), trim( $attr[1] ) );
+					}
 				}
 			}
 		}
-	}
-
-	/**
-	 * TODO: Remove, use \Elementor\Utils:parse_custom_attributes from Core >= 2.9.10.
-	 */
-	private function parse_custom_attributes( $attributes_string, $delimiter = ',' ) {
-		$attributes = explode( $delimiter, $attributes_string );
-		$result = [];
-
-		foreach ( $attributes as $attribute ) {
-			$attr_key_value = explode( '|', $attribute );
-
-			$attr_key = mb_strtolower( $attr_key_value[0] );
-
-			// Remove any not allowed characters.
-			preg_match( '/[-_a-z0-9]+/', $attr_key, $attr_key_matches );
-
-			if ( empty( $attr_key_matches[0] ) ) {
-				continue;
-			}
-
-			$attr_key = $attr_key_matches[0];
-
-			// Avoid Javascript events and unescaped href.
-			if ( 'href' === $attr_key || 'on' === substr( $attr_key, 0, 2 ) ) {
-				continue;
-			}
-
-			if ( isset( $attr_key_value[1] ) ) {
-				$attr_value = trim( $attr_key_value[1] );
-			} else {
-				$attr_value = '';
-			}
-
-			$result[ $attr_key ] = $attr_value;
-		}
-
-		return $result;
 	}
 
 	protected function add_actions() {

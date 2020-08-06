@@ -172,7 +172,6 @@ class Discord extends Action_Base {
 
 		$response = wp_remote_post( $settings['discord_webhook'], [
 			'body' => wp_json_encode( $webhook_data ),
-			'headers' => [ 'Content-Type' => 'application/json; charset=utf-8' ],
 		]);
 
 		if ( 204 !== (int) wp_remote_retrieve_response_code( $response ) ) {

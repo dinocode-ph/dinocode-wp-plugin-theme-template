@@ -2,14 +2,14 @@
 namespace ElementorPro\Modules\Social\Widgets;
 
 use Elementor\Controls_Manager;
-use ElementorPro\Base\Base_Widget;
+use Elementor\Widget_Base;
 use ElementorPro\Modules\Social\Classes\Facebook_SDK_Manager;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class Facebook_Page extends Base_Widget {
+class Facebook_Page extends Widget_Base {
 
 	public function get_name() {
 		return 'facebook-page';
@@ -21,6 +21,10 @@ class Facebook_Page extends Base_Widget {
 
 	public function get_icon() {
 		return 'eicon-fb-feed';
+	}
+
+	public function get_categories() {
+		return [ 'pro-elements' ];
 	}
 
 	public function get_keywords() {

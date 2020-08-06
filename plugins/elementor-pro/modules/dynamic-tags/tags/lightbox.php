@@ -1,11 +1,11 @@
 <?php
 namespace ElementorPro\Modules\DynamicTags\Tags;
 
-use ElementorPro\Modules\DynamicTags\Tags\Base\Tag;
+use Elementor\Core\DynamicTags\Tag;
 use ElementorPro\Modules\DynamicTags\Module;
 use Elementor\Controls_Manager;
 use Elementor\Embed;
-use ElementorPro\Plugin;
+use ElementorPro\Modules\LinkActions\Module as LinkActionsModule;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -39,6 +39,7 @@ class Lightbox extends Tag {
 			[
 				'label' => __( 'Type', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'options' => [
 					'video' => [
 						'title' => __( 'Video', 'elementor-pro' ),
@@ -77,19 +78,10 @@ class Lightbox extends Tag {
 	}
 
 	private function get_image_settings( $settings ) {
-		$image_settings = [
+		return [
 			'url' => $settings['image']['url'],
 			'type' => 'image',
 		];
-
-		$image_id = $settings['image']['id'];
-
-		if ( $image_id ) {
-			$lightbox_image_attributes = Plugin::elementor()->images_manager->get_lightbox_image_attributes( $image_id );
-			$image_settings = array_merge( $image_settings, $lightbox_image_attributes );
-		}
-
-		return $image_settings;
 	}
 
 	private function get_video_settings( $settings ) {
@@ -133,6 +125,6 @@ class Lightbox extends Tag {
 			return;
 		}
 
-		echo Plugin::elementor()->frontend->create_action_hash( 'lightbox', $value );
+		echo LinkActionsModule::create_action_url( 'lightbox', $value );
 	}
 }

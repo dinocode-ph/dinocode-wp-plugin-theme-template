@@ -8,7 +8,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class Archive_Description extends Base_Widget {
+class Archive_Description extends Widget_Base {
 
 	public function get_name() {
 		return 'woocommerce-archive-description';

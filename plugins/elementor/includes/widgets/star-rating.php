@@ -137,6 +137,7 @@ class Widget_Star_Rating extends Widget_Base {
 			[
 				'label' => __( 'Unmarked Style', 'elementor' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'options' => [
 					'solid' => [
 						'title' => __( 'Solid', 'elementor' ),
@@ -404,10 +405,10 @@ class Widget_Star_Rating extends Widget_Base {
 	}
 
 	/**
-	 * @since 2.9.0
+	 * @since 2.3.0
 	 * @access protected
 	 */
-	protected function content_template() {
+	protected function _content_template() {
 		?>
 		<#
 			var getRating = function() {

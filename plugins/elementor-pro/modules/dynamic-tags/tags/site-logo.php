@@ -1,7 +1,7 @@
 <?php
 namespace ElementorPro\Modules\DynamicTags\Tags;
 
-use ElementorPro\Modules\DynamicTags\Tags\Base\Data_Tag;
+use Elementor\Core\DynamicTags\Data_Tag;
 use Elementor\Utils;
 use ElementorPro\Modules\DynamicTags\Module;
 

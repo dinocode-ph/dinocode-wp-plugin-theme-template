@@ -289,17 +289,11 @@ class Widget_Counter extends Widget_Base {
 	 *
 	 * Written as a Backbone JavaScript template and used to generate the live preview.
 	 *
-	 * @since 2.9.0
+	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function content_template() {
+	protected function _content_template() {
 		?>
-		<# view.addRenderAttribute( 'counter-title', {
-			'class': 'elementor-counter-title'
-		} );
-
-		view.addInlineEditingAttributes( 'counter-title' );
-		#>
 		<div class="elementor-counter">
 			<div class="elementor-counter-number-wrapper">
 				<span class="elementor-counter-number-prefix">{{{ settings.prefix }}}</span>
@@ -307,7 +301,7 @@ class Widget_Counter extends Widget_Base {
 				<span class="elementor-counter-number-suffix">{{{ settings.suffix }}}</span>
 			</div>
 			<# if ( settings.title ) {
-				#><div {{{ view.getRenderAttributeString( 'counter-title' ) }}}>{{{ settings.title }}}</div><#
+				#><div class="elementor-counter-title">{{{ settings.title }}}</div><#
 			} #>
 		</div>
 		<?php
@@ -335,10 +329,6 @@ class Widget_Counter extends Widget_Base {
 			$delimiter = empty( $settings['thousand_separator_char'] ) ? ',' : $settings['thousand_separator_char'];
 			$this->add_render_attribute( 'counter', 'data-delimiter', $delimiter );
 		}
-
-		$this->add_render_attribute( 'counter-title', 'class', 'elementor-counter-title' );
-
-		$this->add_inline_editing_attributes( 'counter-title' );
 		?>
 		<div class="elementor-counter">
 			<div class="elementor-counter-number-wrapper">
@@ -347,7 +337,7 @@ class Widget_Counter extends Widget_Base {
 				<span class="elementor-counter-number-suffix"><?php echo $settings['suffix']; ?></span>
 			</div>
 			<?php if ( $settings['title'] ) : ?>
-				<div <?php echo $this->get_render_attribute_string( 'counter-title' ); ?>><?php echo $settings['title']; ?></div>
+				<div class="elementor-counter-title"><?php echo $settings['title']; ?></div>
 			<?php endif; ?>
 		</div>
 		<?php

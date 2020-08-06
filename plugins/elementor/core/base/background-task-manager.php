@@ -73,8 +73,6 @@ abstract class Background_Task_Manager extends BaseModule {
 			return;
 		}
 
-		Plugin::$instance->init_common();
-
 		if ( 'run' === $_GET[ $this->get_action() ] && check_admin_referer( $this->get_action() . 'run' ) ) {
 			$this->start_run();
 		}

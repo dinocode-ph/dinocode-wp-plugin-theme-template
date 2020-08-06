@@ -319,10 +319,10 @@ class Widget_Alert extends Widget_Base {
 	 *
 	 * Written as a Backbone JavaScript template and used to generate the live preview.
 	 *
-	 * @since 2.9.0
+	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function content_template() {
+	protected function _content_template() {
 		?>
 		<# if ( settings.alert_title ) {
 			view.addRenderAttribute( {

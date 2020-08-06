@@ -30,7 +30,6 @@ class Document extends Theme_Section_Document {
 
 		$properties['admin_tab_group'] = 'popup';
 		$properties['location'] = 'popup';
-		$properties['support_kit'] = true;
 
 		return $properties;
 	}
@@ -67,8 +66,8 @@ class Document extends Theme_Section_Document {
 		return $this->display_settings;
 	}
 
-	public function get_initial_config() {
-		$config = parent::get_initial_config();
+	public function _get_initial_config() {
+		$config = parent::_get_initial_config();
 
 		$display_settings = $this->get_display_settings();
 
@@ -242,6 +241,7 @@ class Document extends Theme_Section_Document {
 			[
 				'label' => __( 'Horizontal', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'toggle' => false,
 				'default' => 'center',
 				'options' => [
@@ -273,6 +273,7 @@ class Document extends Theme_Section_Document {
 			[
 				'label' => __( 'Vertical', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'toggle' => false,
 				'default' => 'center',
 				'options' => [
@@ -381,6 +382,7 @@ class Document extends Theme_Section_Document {
 						],
 					],
 				],
+				'frontend_available' => true,
 			]
 		);
 
@@ -773,8 +775,8 @@ class Document extends Theme_Section_Document {
 
 	protected function get_remote_library_config() {
 		$config = parent::get_remote_library_config();
+
 		$config['type'] = 'popup';
-		$config['default_route'] = 'templates/popups';
 		$config['autoImportSettings'] = true;
 
 		return $config;

@@ -6,7 +6,7 @@ use Elementor\Settings;
 use ElementorPro\Modules\Forms\Classes\Form_Record;
 use ElementorPro\Modules\Forms\Controls\Fields_Map;
 use ElementorPro\Modules\Forms\Classes;
-use ElementorPro\Core\Utils;
+use ElementorPro\Classes\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
@@ -57,7 +57,7 @@ class Activecampaign extends Classes\Integration_Base {
 		$widget->add_control(
 			'activecampaign_api_credentials_source',
 			[
-				'label' => __( 'API Key', 'elementor-pro' ),
+				'label' => __( 'API Credentials', 'elementor-pro' ),
 				'type' => Controls_Manager::SELECT,
 				'label_block' => false,
 				'options' => [
@@ -71,7 +71,7 @@ class Activecampaign extends Classes\Integration_Base {
 		$widget->add_control(
 			'activecampaign_api_key',
 			[
-				'label' => __( 'Custom API Key', 'elementor-pro' ),
+				'label' => __( 'API Key', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
 				'description' => __( 'Use this field to set a custom API Key for the current form', 'elementor-pro' ),
 				'condition' => [

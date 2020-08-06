@@ -9,7 +9,7 @@ if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class Product_Meta extends Base_Widget {
+class Product_Meta extends Widget_Base {
 
 	public function get_name() {
 		return 'woocommerce-product-meta';
@@ -51,6 +51,7 @@ class Product_Meta extends Base_Widget {
 			[
 				'label' => __( 'View', 'elementor-pro' ),
 				'type' => Controls_Manager::SELECT,
+				'label_block' => false,
 				'default' => 'inline',
 				'options' => [
 					'table' => __( 'Table', 'elementor-pro' ),

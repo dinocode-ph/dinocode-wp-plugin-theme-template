@@ -152,7 +152,7 @@ class Login extends Base_Widget {
 			[
 				'type' => Controls_Manager::URL,
 				'show_label' => false,
-				'options' => false,
+				'show_external' => false,
 				'separator' => false,
 				'placeholder' => __( 'https://your-link.com', 'elementor-pro' ),
 				'description' => __( 'Note: Because of security reasons, you can ONLY use your current domain here.', 'elementor-pro' ),
@@ -178,7 +178,7 @@ class Login extends Base_Widget {
 			[
 				'type' => Controls_Manager::URL,
 				'show_label' => false,
-				'options' => false,
+				'show_external' => false,
 				'separator' => false,
 				'placeholder' => __( 'https://your-link.com', 'elementor-pro' ),
 				'description' => __( 'Note: Because of security reasons, you can ONLY use your current domain here.', 'elementor-pro' ),
@@ -247,7 +247,7 @@ class Login extends Base_Widget {
 			[
 				'label' => __( 'Username Label', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => __( 'Username or Email Address', 'elementor-pro' ),
+				'default' => __( ' Username or Email Address', 'elementor-pro' ),
 				'condition' => [
 					'show_labels' => 'yes',
 					'custom_labels' => 'yes',
@@ -260,7 +260,7 @@ class Login extends Base_Widget {
 			[
 				'label' => __( 'Username Placeholder', 'elementor-pro' ),
 				'type' => Controls_Manager::TEXT,
-				'default' => __( 'Username or Email Address', 'elementor-pro' ),
+				'default' => __( ' Username or Email Address', 'elementor-pro' ),
 				'condition' => [
 					'custom_labels' => 'yes',
 				],
@@ -737,9 +737,6 @@ class Login extends Base_Widget {
 						'elementor-size-' . $settings['input_size'],
 					],
 				],
-				'password_label' => [
-					'for' => 'password',
-				],
 				'password_input' => [
 					'type' => 'password',
 					'name' => 'pwd',
@@ -870,15 +867,7 @@ class Login extends Base_Widget {
 		<?php
 	}
 
-	/**
-	 * Render Login Form output in the editor.
-	 *
-	 * Written as a Backbone JavaScript template and used to generate the live preview.
-	 *
-	 * @since 2.9.0
-	 * @access protected
-	 */
-	protected function content_template() {
+	protected function _content_template() {
 		?>
 		<div class="elementor-login elementor-form">
 			<div class="elementor-form-fields-wrapper">

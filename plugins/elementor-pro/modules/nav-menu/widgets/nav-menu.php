@@ -7,14 +7,14 @@ use Elementor\Core\Responsive\Responsive;
 use Elementor\Group_Control_Border;
 use Elementor\Group_Control_Box_Shadow;
 use Elementor\Group_Control_Typography;
-use ElementorPro\Base\Base_Widget;
+use Elementor\Widget_Base;
 use ElementorPro\Plugin;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
 }
 
-class Nav_Menu extends Base_Widget {
+class Nav_Menu extends Widget_Base {
 
 	protected $nav_menu_index = 1;
 
@@ -95,7 +95,7 @@ class Nav_Menu extends Base_Widget {
 					'type' => Controls_Manager::RAW_HTML,
 					'raw' => '<strong>' . __( 'There are no menus in your site.', 'elementor-pro' ) . '</strong><br>' . sprintf( __( 'Go to the <a href="%s" target="_blank">Menus screen</a> to create one.', 'elementor-pro' ), admin_url( 'nav-menus.php?action=edit&menu=0' ) ),
 					'separator' => 'after',
-					'content_classes' => 'elementor-panel-alert elementor-panel-alert-info',
+					'content_classes' => 'elementor-panel-alert elementor-panel-alert-warning',
 				]
 			);
 		}
@@ -120,6 +120,7 @@ class Nav_Menu extends Base_Widget {
 			[
 				'label' => __( 'Align', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'options' => [
 					'left' => [
 						'title' => __( 'Left', 'elementor-pro' ),
@@ -392,6 +393,7 @@ class Nav_Menu extends Base_Widget {
 					'toggle!' => '',
 					'dropdown!' => 'none',
 				],
+				'label_block' => false,
 			]
 		);
 
@@ -667,6 +669,9 @@ class Nav_Menu extends Base_Widget {
 			[
 				'label' => __( 'Dropdown', 'elementor-pro' ),
 				'tab' => Controls_Manager::TAB_STYLE,
+				'condition' => [
+					'dropdown!' => 'none',
+				],
 			]
 		);
 
@@ -796,7 +801,7 @@ class Nav_Menu extends Base_Widget {
 				'name' => 'dropdown_typography',
 				'scheme' => Schemes\Typography::TYPOGRAPHY_4,
 				'exclude' => [ 'line_height' ],
-				'selector' => '{{WRAPPER}} .elementor-nav-menu--dropdown .elementor-item, {{WRAPPER}} .elementor-nav-menu--dropdown  .elementor-sub-item',
+				'selector' => '{{WRAPPER}} .elementor-nav-menu--dropdown',
 				'separator' => 'before',
 			]
 		);

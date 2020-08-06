@@ -98,9 +98,6 @@ class Widget_Toggle extends Widget_Base {
 				'type' => Controls_Manager::TEXT,
 				'default' => __( 'Toggle Title', 'elementor' ),
 				'label_block' => true,
-				'dynamic' => [
-					'active' => true,
-				],
 			]
 		);
 
@@ -306,14 +303,13 @@ class Widget_Toggle extends Widget_Base {
 			]
 		);
 
-		// The title selector specificity is to override Theme Style
 		$this->add_control(
 			'title_color',
 			[
 				'label' => __( 'Color', 'elementor' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-toggle-title, {{WRAPPER}} .elementor-toggle-icon' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .elementor-toggle .elementor-tab-title' => 'color: {{VALUE}};',
 				],
 				'scheme' => [
 					'type' => Schemes\Color::get_type(),
@@ -328,7 +324,7 @@ class Widget_Toggle extends Widget_Base {
 				'label' => __( 'Active Color', 'elementor' ),
 				'type' => Controls_Manager::COLOR,
 				'selectors' => [
-					'{{WRAPPER}} .elementor-tab-title.elementor-active a, {{WRAPPER}} .elementor-tab-title.elementor-active .elementor-toggle-icon' => 'color: {{VALUE}};',
+					'{{WRAPPER}} .elementor-toggle .elementor-tab-title.elementor-active' => 'color: {{VALUE}};',
 				],
 				'scheme' => [
 					'type' => Schemes\Color::get_type(),
@@ -341,7 +337,7 @@ class Widget_Toggle extends Widget_Base {
 			Group_Control_Typography::get_type(),
 			[
 				'name' => 'title_typography',
-				'selector' => '{{WRAPPER}} .elementor-toggle .elementor-toggle-title',
+				'selector' => '{{WRAPPER}} .elementor-toggle .elementor-tab-title',
 				'scheme' => Schemes\Typography::TYPOGRAPHY_1,
 			]
 		);
@@ -388,6 +384,7 @@ class Widget_Toggle extends Widget_Base {
 				],
 				'default' => is_rtl() ? 'right' : 'left',
 				'toggle' => false,
+				'label_block' => false,
 			]
 		);
 
@@ -561,7 +558,7 @@ class Widget_Toggle extends Widget_Base {
 							<?php } ?>
 						</span>
 						<?php endif; ?>
-						<a href="" class="elementor-toggle-title"><?php echo $item['tab_title']; ?></a>
+						<a href=""><?php echo $item['tab_title']; ?></a>
 					</<?php echo esc_html( $settings['title_html_tag'] ); ?>>
 					<div <?php echo $this->get_render_attribute_string( $tab_content_setting_key ); ?>><?php echo $this->parse_text_editor( $item['tab_content'] ); ?></div>
 				</div>
@@ -575,10 +572,10 @@ class Widget_Toggle extends Widget_Base {
 	 *
 	 * Written as a Backbone JavaScript template and used to generate the live preview.
 	 *
-	 * @since 2.9.0
+	 * @since 1.0.0
 	 * @access protected
 	 */
-	protected function content_template() {
+	protected function _content_template() {
 		?>
 		<div class="elementor-toggle" role="tablist">
 			<#

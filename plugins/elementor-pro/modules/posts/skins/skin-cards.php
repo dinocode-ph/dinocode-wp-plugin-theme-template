@@ -55,7 +55,6 @@ class Skin_Cards extends Skin_Base {
 		$this->register_excerpt_controls();
 		$this->register_meta_data_controls();
 		$this->register_read_more_controls();
-		$this->register_link_controls();
 		$this->register_badge_controls();
 		$this->register_avatar_controls();
 	}
@@ -124,6 +123,7 @@ class Skin_Cards extends Skin_Base {
 			'badge_position',
 			[
 				'label' => 'Badge Position',
+				'label_block' => false,
 				'type' => Controls_Manager::CHOOSE,
 				'options' => [
 					'left' => [
@@ -488,7 +488,6 @@ class Skin_Cards extends Skin_Base {
 
 	protected function register_design_content_controls() {
 		parent::register_design_content_controls();
-
 		$this->remove_control( 'meta_spacing' );
 
 		$this->update_control(
@@ -568,11 +567,8 @@ class Skin_Cards extends Skin_Base {
 		if ( empty( $thumbnail_html ) ) {
 			return;
 		}
-
-		$optional_attributes_html = $this->get_optional_link_attributes_html();
-
 		?>
-		<a class="elementor-post__thumbnail__link" href="<?php echo get_permalink(); ?>" <?php echo $optional_attributes_html; ?>>
+		<a class="elementor-post__thumbnail__link" href="<?php echo get_permalink(); ?>">
 			<div class="elementor-post__thumbnail"><?php echo $thumbnail_html; ?></div>
 		</a>
 		<?php

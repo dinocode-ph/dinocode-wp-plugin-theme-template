@@ -1,7 +1,7 @@
 <?php
 namespace ElementorPro\Modules\Woocommerce\Tags;
 
-use ElementorPro\Modules\DynamicTags\Tags\Base\Tag;
+use Elementor\Core\DynamicTags\Tag;
 use ElementorPro\Modules\Woocommerce\Module;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -9,7 +9,6 @@ if ( ! defined( 'ABSPATH' ) ) {
 }
 
 abstract class Base_Tag extends Tag {
-
 	public function get_group() {
 		return Module::WOOCOMMERCE_GROUP;
 	}

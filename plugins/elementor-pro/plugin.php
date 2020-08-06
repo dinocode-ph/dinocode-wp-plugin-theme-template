@@ -7,8 +7,6 @@ use Elementor\Core\Responsive\Files\Frontend as FrontendFile;
 use Elementor\Core\Responsive\Responsive;
 use Elementor\Utils;
 use ElementorPro\Core\Editor\Editor;
-use ElementorPro\Core\Modules_Manager;
-use ElementorPro\Core\Preview\Preview;
 use ElementorPro\Core\Upgrade\Manager as UpgradeManager;
 
 if ( ! defined( 'ABSPATH' ) ) {
@@ -26,7 +24,7 @@ class Plugin {
 	private static $_instance;
 
 	/**
-	 * @var Modules_Manager
+	 * @var Manager
 	 */
 	public $modules_manager;
 
@@ -39,11 +37,6 @@ class Plugin {
 	 * @var Editor
 	 */
 	public $editor;
-
-	/**
-	 * @var Preview
-	 */
-	public $preview;
 
 	/**
 	 * @var Admin
@@ -114,6 +107,10 @@ class Plugin {
 		}
 
 		return self::$_instance;
+	}
+
+	private function includes() {
+		require ELEMENTOR_PRO_PATH . 'includes/modules-manager.php';
 	}
 
 	public function autoload( $class ) {
@@ -233,24 +230,20 @@ class Plugin {
 		);
 
 		wp_register_script(
+			'social-share',
+			ELEMENTOR_PRO_URL . 'assets/lib/social-share/social-share' . $suffix . '.js',
+			[
+				'jquery',
+			],
+			'0.2.17',
+			true
+		);
+
+		wp_register_script(
 			'elementor-sticky',
 			ELEMENTOR_PRO_URL . 'assets/lib/sticky/jquery.sticky' . $suffix . '.js',
 			[
 				'jquery',
-			],
-			ELEMENTOR_PRO_VERSION,
-			true
-		);
-	}
-
-	public function register_preview_scripts() {
-		$suffix = defined( 'SCRIPT_DEBUG' ) && SCRIPT_DEBUG ? '' : '.min';
-
-		wp_enqueue_script(
-			'elementor-pro-preview',
-			ELEMENTOR_PRO_URL . 'assets/js/preview' . $suffix . '.js',
-			[
-				'elementor-frontend',
 			],
 			ELEMENTOR_PRO_VERSION,
 			true
@@ -270,7 +263,7 @@ class Plugin {
 	}
 
 	public function on_elementor_init() {
-		$this->modules_manager = new Modules_Manager();
+		$this->modules_manager = new Manager();
 
 		/** TODO: BC for Elementor v2.4.0 */
 		if ( class_exists( '\Elementor\Core\Upgrade\Manager' ) ) {
@@ -303,7 +296,6 @@ class Plugin {
 		add_action( 'elementor/init', [ $this, 'on_elementor_init' ] );
 
 		add_action( 'elementor/frontend/before_register_scripts', [ $this, 'register_frontend_scripts' ] );
-		add_action( 'elementor/preview/enqueue_scripts', [ $this, 'register_preview_scripts' ] );
 
 		add_action( 'elementor/frontend/before_enqueue_scripts', [ $this, 'enqueue_frontend_scripts' ] );
 		add_action( 'elementor/frontend/after_enqueue_styles', [ $this, 'enqueue_styles' ] );
@@ -318,13 +310,13 @@ class Plugin {
 	private function __construct() {
 		spl_autoload_register( [ $this, 'autoload' ] );
 
+		$this->includes();
+
 		new Connect\Manager();
 
 		$this->setup_hooks();
 
 		$this->editor = new Editor();
-
-		$this->preview = new Preview();
 
 		if ( is_admin() ) {
 			$this->admin = new Admin();

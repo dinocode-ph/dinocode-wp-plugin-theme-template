@@ -2,10 +2,11 @@
 namespace ElementorPro\Modules\Popup;
 
 use Elementor\Controls_Manager;
-use ElementorPro\Modules\DynamicTags\Tags\Base\Tag as DynamicTagsTag;
+use Elementor\Core\DynamicTags\Tag as DynamicTagsTag;
 use ElementorPro\Modules\DynamicTags\Module as DynamicTagsModule;
+use ElementorPro\Modules\LinkActions\Module as LinkActionsModule;
 use ElementorPro\Modules\QueryControl\Module as QueryControlModule;
-use ElementorPro\Plugin;
+use Elementor\TemplateLibrary\Source_Local;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -101,7 +102,7 @@ class Tag extends DynamicTagsTag {
 			return;
 		}
 
-		$link_action_url = Plugin::elementor()->frontend->create_action_hash( 'popup:open', [
+		$link_action_url = LinkActionsModule::create_action_url( 'popup:open', [
 			'id' => $settings['popup'],
 			'toggle' => 'toggle' === $settings['action'],
 		] );
@@ -112,6 +113,6 @@ class Tag extends DynamicTagsTag {
 	}
 
 	private function print_close_popup_link( array $settings ) {
-		echo Plugin::elementor()->frontend->create_action_hash( 'popup:close', [ 'do_not_show_again' => $settings['do_not_show_again'] ] );
+		echo LinkActionsModule::create_action_url( 'popup:close', [ 'do_not_show_again' => $settings['do_not_show_again'] ] );
 	}
 }

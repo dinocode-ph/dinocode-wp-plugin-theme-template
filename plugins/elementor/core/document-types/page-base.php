@@ -178,6 +178,7 @@ abstract class PageBase extends Document {
 					'label' => __( 'Excerpt', 'elementor' ),
 					'type' => Controls_Manager::TEXTAREA,
 					'default' => $document->post->post_excerpt,
+					'label_block' => true,
 				]
 			);
 		}
@@ -190,7 +191,7 @@ abstract class PageBase extends Document {
 					'type' => Controls_Manager::MEDIA,
 					'default' => [
 						'id' => get_post_thumbnail_id(),
-						'url' => (string) get_the_post_thumbnail_url( $document->post->ID ),
+						'url' => get_the_post_thumbnail_url( $document->post->ID ),
 					],
 				]
 			);
@@ -226,7 +227,6 @@ abstract class PageBase extends Document {
 
 		$config['category'] = '';
 		$config['type'] = 'page';
-		$config['default_route'] = 'templates/pages';
 
 		return $config;
 	}

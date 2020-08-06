@@ -1,7 +1,7 @@
 <?php
 namespace Elementor\Core\Logger;
 
-use Elementor\Modules\System_Info\Reporters\Base;
+use Elementor\System_Info\Classes\Abstracts\Base_Reporter;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -15,7 +15,7 @@ if ( ! defined( 'ABSPATH' ) ) {
  *
  * @since 2.4.0
  */
-class Log_Reporter extends Base {
+class Log_Reporter extends Base_Reporter {
 
 	const MAX_ENTRIES = 20;
 	const CLEAR_LOG_ACTION = 'elementor-clear-log';
@@ -30,7 +30,7 @@ class Log_Reporter extends Base {
 				'_wpnonce' => $nonce,
 			] );
 
-			$title .= '<a href="' . esc_url( $url ) . '#elementor-clear-log" class="box-title-tool">' . __( 'Clear Log', 'elementor' ) . '</a>';
+			$title .= '<a href="' . $url . '#elementor-clear-log" class="box-title-tool">' . __( 'Clear Log', 'elementor' ) . '</a>';
 			$title .= '<span id="elementor-clear-log"></span>';
 		}
 

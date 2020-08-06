@@ -10,7 +10,6 @@ class Page extends PageBase {
 		$properties = parent::get_properties();
 
 		$properties['cpt'] = [ 'page' ];
-		$properties['support_kit'] = true;
 
 		return $properties;
 	}

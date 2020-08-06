@@ -62,6 +62,7 @@ class Call_To_Action extends Base_Widget {
 			[
 				'label' => __( 'Position', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'options' => [
 					'left' => [
 						'title' => __( 'Left', 'elementor-pro' ),
@@ -124,6 +125,7 @@ class Call_To_Action extends Base_Widget {
 			[
 				'label' => __( 'Graphic Element', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'options' => [
 					'none' => [
 						'title' => __( 'None', 'elementor-pro' ),
@@ -340,6 +342,7 @@ class Call_To_Action extends Base_Widget {
 			[
 				'label' => __( 'Position', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'options' => [
 					'left' => [
 						'title' => __( 'Left', 'elementor-pro' ),
@@ -393,6 +396,7 @@ class Call_To_Action extends Base_Widget {
 			[
 				'label' => __( 'Alignment', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'options' => [
 					'left' => [
 						'title' => __( 'Left', 'elementor-pro' ),
@@ -419,6 +423,7 @@ class Call_To_Action extends Base_Widget {
 			[
 				'label' => __( 'Vertical Position', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'options' => [
 					'top' => [
 						'title' => __( 'Top', 'elementor-pro' ),
@@ -523,10 +528,7 @@ class Call_To_Action extends Base_Widget {
 				'label' => __( 'Graphic Element', 'elementor-pro' ),
 				'tab' => Controls_Manager::TAB_STYLE,
 				'condition' => [
-					'graphic_element!' => [
-						'none',
-						'',
-					],
+					'graphic_element!' => 'none',
 				],
 			]
 		);
@@ -1593,7 +1595,15 @@ class Call_To_Action extends Base_Widget {
 				$link_element = 'wrapper';
 			}
 
-			$this->add_link_attributes( $link_element, $settings['link'] );
+			$this->add_render_attribute( $link_element, 'href', $settings['link']['url'] );
+
+			if ( $settings['link']['is_external'] ) {
+				$this->add_render_attribute( $link_element, 'target', '_blank' );
+			}
+
+			if ( $settings['link']['nofollow'] ) {
+				$this->add_render_attribute( $link_element, 'rel', 'nofollow' );
+			}
 		}
 
 		$this->add_inline_editing_attributes( 'title' );
@@ -1666,15 +1676,7 @@ class Call_To_Action extends Base_Widget {
 		<?php
 	}
 
-	/**
-	 * Render Call to Action widget output in the editor.
-	 *
-	 * Written as a Backbone JavaScript template and used to generate the live preview.
-	 *
-	 * @since 2.9.0
-	 * @access protected
-	 */
-	protected function content_template() {
+	protected function _content_template() {
 		?>
 		<#
 			var wrapperTag = 'div',

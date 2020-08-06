@@ -267,6 +267,7 @@ class Group_Control_Image_Size extends Group_Control_Base {
 		$fields['size'] = [
 			'label' => _x( 'Image Size', 'Image Size Control', 'elementor' ),
 			'type' => Controls_Manager::SELECT,
+			'label_block' => false,
 		];
 
 		$fields['custom_dimension'] = [

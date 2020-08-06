@@ -120,6 +120,7 @@ class Search_Form extends Base {
 			[
 				'label' => __( 'Icon', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'default' => 'search',
 				'options' => [
 					'search' => [
@@ -178,6 +179,7 @@ class Search_Form extends Base {
 			[
 				'label' => __( 'Alignment', 'elementor-pro' ),
 				'type' => Controls_Manager::CHOOSE,
+				'label_block' => false,
 				'default' => 'center',
 				'options' => [
 					'left' => [
@@ -560,6 +562,7 @@ class Search_Form extends Base {
 				],
 				'condition' => [
 					'button_type' => 'icon',
+					'skin!' => 'full_screen',
 				],
 				'separator' => 'before',
 			]
@@ -579,6 +582,9 @@ class Search_Form extends Base {
 				],
 				'selectors' => [
 					'{{WRAPPER}} .elementor-search-form__submit' => 'min-width: calc( {{SIZE}} * {{size.SIZE}}{{size.UNIT}} )',
+				],
+				'condition' => [
+					'skin' => 'classic',
 				],
 			]
 		);
@@ -669,6 +675,9 @@ class Search_Form extends Base {
 				'type' => Controls_Manager::SLIDER,
 				'selectors' => [
 					'{{WRAPPER}} .elementor-search-form__toggle i:before' => 'font-size: calc({{SIZE}}em / 100)',
+				],
+				'condition' => [
+					'skin' => 'full_screen',
 				],
 				'separator' => 'before',
 			]
@@ -779,15 +788,7 @@ class Search_Form extends Base {
 		<?php
 	}
 
-	/**
-	 * Render Search Form widget output in the editor.
-	 *
-	 * Written as a Backbone JavaScript template and used to generate the live preview.
-	 *
-	 * @since 2.9.0
-	 * @access protected
-	 */
-	protected function content_template() {
+	protected function _content_template() {
 		?>
 		<#
 			var iconClass = 'fa fas fa-search';

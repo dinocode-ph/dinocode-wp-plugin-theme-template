@@ -68,7 +68,6 @@ class Control_Wysiwyg extends Base_Data_Control {
 		return [
 			'label_block' => true,
 			'dynamic' => [
-				'active' => true,
 				'categories' => [ TagsModule::TEXT_CATEGORY ],
 			],
 		];

@@ -58,9 +58,6 @@ class Module extends Module_Base {
 			'title' => 'StumbleUpon',
 			'has_counter' => true,
 		],
-		'mix' => [
-			'title' => 'Mix',
-		],
 		'telegram' => [
 			'title' => 'Telegram',
 		],

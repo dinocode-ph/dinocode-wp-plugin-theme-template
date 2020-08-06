@@ -138,7 +138,6 @@
 	"fedora",
 	"figma",
 	"firefox",
-	"firefox-browser",
 	"first-order",
 	"first-order-alt",
 	"firstdraft",
@@ -199,7 +198,6 @@
 	"houzz",
 	"html5",
 	"hubspot",
-	"ideal",
 	"imdb",
 	"instagram",
 	"intercom",
@@ -249,7 +247,6 @@
 	"meetup",
 	"megaport",
 	"mendeley",
-	"microblog",
 	"microsoft",
 	"mix",
 	"mixcloud",
@@ -288,7 +285,6 @@
 	"pied-piper-alt",
 	"pied-piper-hat",
 	"pied-piper-pp",
-	"pied-piper-square",
 	"pinterest",
 	"pinterest-p",
 	"pinterest-square",
@@ -388,7 +384,6 @@
 	"uikit",
 	"umbraco",
 	"uniregistry",
-	"unity",
 	"untappd",
 	"ups",
 	"usb",
@@ -438,5 +433,5 @@
 	"youtube",
 	"youtube-square",
 	"zhihu"
-	]
+  ]
 }

@@ -1,7 +1,7 @@
 <?php
 namespace ElementorPro\Modules\Forms\Classes;
 
-use ElementorPro\Core\Utils;
+use ElementorPro\Classes\Utils;
 
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly
@@ -180,14 +180,14 @@ class Form_Record {
 				case 'page_url':
 					$this->meta['page_url'] = [
 						'title' => __( 'Page URL', 'elementor-pro' ),
-						'value' => esc_url_raw( $_POST['referrer'] ),
+						'value' => $_POST['referrer'],
 					];
 					break;
 
 				case 'user_agent':
 					$this->meta['user_agent'] = [
 						'title' => __( 'User Agent', 'elementor-pro' ),
-						'value' => sanitize_textarea_field( $_SERVER['HTTP_USER_AGENT'] ),
+						'value' => $_SERVER['HTTP_USER_AGENT'],
 					];
 					break;
 
